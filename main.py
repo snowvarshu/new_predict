@@ -18,7 +18,7 @@ class CropFeatures(BaseModel):
 
 @app.get('/')
 def home():
-    return{"message" : "heyyyo000"}
+    return{"message" : "heyyyooo"}
 
 @app.post('/predict')
 async def predictor(features:CropFeatures):
@@ -33,4 +33,15 @@ async def predictor(features:CropFeatures):
         "Season": str(features.Season)
 }])
     prediction = package.predict(input_data)
-    return {"prediction" : prediction.tolist()}
+    score = float(prediction[0]) if hasattr(prediction, '__len__') else float(prediction)
+
+    if score >= 75:
+        message = "The crop has excellent cropping pattern"
+    elif score >= 60:
+        message = "The crop has good cropping pattern"
+    elif score >= 40:
+        message = "The crop had average cropping pattern"
+    else:
+        message = "The crop has bad cropping pattern"
+
+    return {"prediction": prediction.tolist(), "message": message}
