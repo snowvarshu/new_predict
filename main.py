@@ -1,11 +1,19 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-import pandas as pd
-import joblib
+from fastapi import FastAPI  
+from pydantic import BaseModel   
+from fastapi.middleware.cors import CORSMiddleware   
+import pandas as pd   
+import joblib  
 
 package = joblib.load("Crop_modell.joblib")
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = ["https://localhost:4200"],
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"],
+)
 class CropFeatures(BaseModel):
     Crop : str
     Year : str
